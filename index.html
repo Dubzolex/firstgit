@@ -1,11 +1,31 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Game</title>
 </head>
 <body>
-    <h1>Hello world Git</h1>
+  <h1>Online Game</h1>
+  <input id="name" placeholder="Enter name">
+  <button onclick="joinGame()">Join</button>
+  <ul id="players"></ul>
+
+  <script>
+    async function joinGame() {
+      const name = document.getElementById('name').value;
+      await fetch('http://localhost:3000/join', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name })
+      });
+      loadPlayers();
+    }
+
+    async function loadPlayers() {
+      const res = await fetch('http://localhost:3000/players');
+      const data = await res.json();
+      document.getElementById('players').innerHTML = data.map(p => `<li>${p.name}</li>`).join('');
+    }
+    loadPlayers();
+  </script>
 </body>
 </html>
